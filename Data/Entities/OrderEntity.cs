@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Entities;
 
-public class OrdersEntity
+public class OrderEntity
 {
     [Key]
     public int Id { get; set; }

@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Busine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PressApp", "PressApp\PressApp.csproj", "{BB6F7684-A559-4707-9F14-AC0E6D0F7C86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PressWebAPI", "PressWebAPI\PressWebAPI.csproj", "{18C97363-4881-4FDB-96F1-0BD45A09FCF8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2ADAACB1-660F-42B0-B037-A1E907FDAFA4} = {2ADAACB1-660F-42B0-B037-A1E907FDAFA4}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +32,10 @@ Global
 		{BB6F7684-A559-4707-9F14-AC0E6D0F7C86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB6F7684-A559-4707-9F14-AC0E6D0F7C86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB6F7684-A559-4707-9F14-AC0E6D0F7C86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18C97363-4881-4FDB-96F1-0BD45A09FCF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18C97363-4881-4FDB-96F1-0BD45A09FCF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18C97363-4881-4FDB-96F1-0BD45A09FCF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18C97363-4881-4FDB-96F1-0BD45A09FCF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

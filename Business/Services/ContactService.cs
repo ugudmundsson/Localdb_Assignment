@@ -1,81 +1,84 @@
-﻿using Business.Interfaces;
-using Data.Contexts;
+﻿using Business.Dtos;
+using Business.Interfaces;
+using Business.Models;
 using Data.Entities;
+using Data.Interfaces;
+using Data.Repositories;
 
 namespace Business.Services;
 
-public class ContactService(DataContext context) : IContactService
+public class ContactService(IContactRepository contactRepository) : IContactService
 {
 
-    private readonly DataContext _context = context;
+    private readonly IContactRepository _contactRepository = contactRepository;
 
-
-
-    // Create contact
-
-
-    public ContactEntity CreateContact(ContactEntity contactEntity)
+    //CREATE-------------------------------------------------
+    public async Task<bool> CreateContactAsync(ContactRegistrationForm form)
     {
 
-        _context.Contacts.Add(contactEntity);
-        _context.SaveChanges();
-
-        return contactEntity;
-    }
-
-    public IEnumerable<ContactEntity> GetContacts()
-    {
-        return _context.Contacts;
-    }
-
-
-
-    // Get contact by id
-
-
-    public ContactEntity GetContactById(int id)
-    {
-        var contactEntity = _context.Contacts.FirstOrDefault(x => x.Id == id);
-        return contactEntity ?? null!;
-    }
-
-    public ContactEntity GetContactByEmail(string email)
-    {
-        var contactEntity = _context.Contacts.FirstOrDefault(x => x.Email == email);
-        return contactEntity ?? null!;
-    }
-
-
-    // Update contact
-
-
-
-    public ContactEntity UpdateContact(ContactEntity contactEntity)
-    {
-        _context.Contacts.Update(contactEntity);
-        _context.SaveChanges();
-
-        return contactEntity;
-    }
-
-
-
-    // Delete contact
-
-
-    public bool DeleteContact(int id)
-    {
-        var contactEntity = _context.Contacts.FirstOrDefault(x => x.Id == id);
-        if (contactEntity != null)
+        var contact = new ContactEntity
         {
-            _context.Contacts.Remove(contactEntity);
-            _context.SaveChanges();
-            return true;
-        }
-        else
+            FirstName = form.FirstName,
+            LastName = form.LastName,
+            Email = form.Email,
+            PhoneNumber = form.PhoneNumber,
+        };
+
+        var result = await _contactRepository.CreateAsync(contact);
+        return result;
+    }
+
+
+
+
+    //READ-------------------------------------------------
+    public async Task<IEnumerable<Contact>> GetAllAsync()
+    {
+        var contacts = await _contactRepository.GetAllAsync();
+        return contacts.Select(x => new Contact(x.Id, x.FirstName, x.LastName, x.Email, x.PhoneNumber));
+    }
+
+    public async Task<ContactEntity> GetByIdAsync(int id)
+    {
+        return await _contactRepository.GetAsync(x => x.Id == id);
+
+    }
+
+
+
+
+    //UPDATE-------------------------------------------------
+
+    public async Task<Contact> UpdateContactAsync(ContactUpdateForm form)
+    {
+        var contact = await _contactRepository.GetAsync(x => x.Id == form.Id);
         {
+            contact.Id = form.Id;
+            contact.FirstName = form.FirstName;
+            contact.LastName = form.LastName;
+            contact.Email = form.Email;
+            contact.PhoneNumber = form.PhoneNumber;
+        };
+
+        var result = await _contactRepository.UpdateAsync(x => x.Id == form.Id, contact);
+        return new Contact(result.Id, result.FirstName, result.LastName, result.Email, result.PhoneNumber);
+    }
+
+
+
+
+
+    //DELETE-------------------------------------------------
+
+    public async Task<bool> DeleteContactAsync(int id)
+    {
+        var contact = await _contactRepository.GetAsync(x => x.Id == id);
+        if (contact == null)
             return false;
-        }
 
+        var result = await _contactRepository.DeleteAsync(x => x.Id == id);
+        return result;
     }
+
+
 }

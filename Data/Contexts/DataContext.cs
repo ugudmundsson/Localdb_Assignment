@@ -13,9 +13,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
     public DbSet<EmployeesEntity> Employees { get; set; }
 
-    public DbSet<OrdersEntity> Orders { get; set; }
+    public DbSet<OrderEntity> Orders { get; set; }
 
-    public DbSet<RolesEntity> Roles { get; set; }
+    public DbSet<RoleEntity> Roles { get; set; }
 
    
     

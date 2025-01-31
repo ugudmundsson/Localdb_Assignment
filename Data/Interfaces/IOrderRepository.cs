@@ -2,6 +2,6 @@
 
 namespace Data.Interfaces;
 
-public interface IOrderRepository : IBaseRepository<OrdersEntity>
+public interface IOrderRepository : IBaseRepository<OrderEntity>
 {
 }

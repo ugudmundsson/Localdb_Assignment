@@ -2,6 +2,6 @@
 
 namespace Data.Interfaces;
 
-public interface IRoleRepository : IBaseRepository<RolesEntity>
+public interface IRoleRepository : IBaseRepository<RoleEntity>
 {
 }

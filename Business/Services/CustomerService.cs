@@ -1,59 +1,74 @@
-﻿using Business.Dtos;
+﻿
+using Business.Dtos;
 using Business.Interfaces;
-using Data.Contexts;
+using Business.Models;
 using Data.Entities;
-using Microsoft.EntityFrameworkCore;
+using Data.Interfaces;
+using Data.Repositories;
+
 
 namespace Business.Services;
 
-public class CustomerService(DataContext context) : ICustomerService
+public class CustomerService(ICustomertRepository customerRepository) : ICustomerService
 {
+    private readonly ICustomertRepository _customerRepository = customerRepository;
 
-    private readonly DataContext _context = context;
 
-
-    public CustomerEntity CreateCustomer(CustomerEntity customerEntity)
+    //CREATE-------------------------------------------------
+    public async Task<bool> CreateCustomerAsync(CustomerRegistrationForm form)
     {
-   
-        _context.Customer.Add(customerEntity);
-        _context.SaveChanges();
+       
+       
 
-        return customerEntity;
-    }
-
-    public IEnumerable<CustomerEntity> GetCustomer()
-    {
-        var customer = _context.Customer.Include(x => x.Contact).ToList();
-        return _context.Customer;
-    }
-
-    public CustomerEntity GetCustomerById(int id)
-    {
-        var customerEntity = _context.Customer.FirstOrDefault(x => x.Id == id);
-        return customerEntity ?? null!;
-    }
-
-    public CustomerEntity UpdateCustomer(CustomerEntity customerEntity)
-    {
-        _context.Customer.Update(customerEntity);
-        _context.SaveChanges();
-
-        return customerEntity;
-    }
-
-    public bool DeleteCustomer(int id)
-    {
-        var customerEntity = _context.Customer.FirstOrDefault(x => x.Id == id);
-        if (customerEntity != null)
+        var customer = new CustomerEntity
         {
-            _context.Customer.Remove(customerEntity);
-            _context.SaveChanges();
-            return true;
+            Name = form.Name,
+            ContactId = form.ContactId,
+        };
+
+        var result = await _customerRepository.CreateAsync(customer);
+        return result;
+    }
+
+
+    //READ-------------------------------------------------
+    public async Task<IEnumerable<Customer>> GetAllAsync()
+    {
+        var customers = await _customerRepository.GetAllAsync();
+        return customers.Select(x => new Customer(x.Id, x.Name, x.ContactId));
+    }
+
+
+
+
+    //UPDATE-------------------------------------------------
+
+    public async Task<Customer> UpdateCustomerAsync(CustomerUpdateForm form)
+    {
+        var customer = await _customerRepository.GetAsync(x => x.Id == form.Id);
+        {
+            customer.Id = form.Id;
+            customer.Name = form.Name;
+            customer.ContactId = form.ContactId;
+            var result = await _customerRepository.UpdateAsync(x => x.Id == form.Id, customer);
+            return new Customer(result.Id, result.Name, result.ContactId);
         }
-        else
-        {
+    }
+
+
+
+    //DELETE-------------------------------------------------
+
+    public async Task<bool> DeleteContactAsync(int id)
+    {
+        var contact = await _customerRepository.GetAsync(x => x.Id == id);
+        if (contact == null)
             return false;
-        }
 
+        var result = await _customerRepository.DeleteAsync(x => x.Id == id);
+        return result;
     }
+
+
+
 }

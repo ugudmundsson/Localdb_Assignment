@@ -91,17 +91,14 @@ namespace Data.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RolesNameId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("RolesNameId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Data.Entities.OrdersEntity", b =>
+            modelBuilder.Entity("Data.Entities.OrderEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -113,9 +110,8 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Price")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
@@ -136,16 +132,10 @@ namespace Data.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EmployeesId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrdersId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProjectDescription")
@@ -167,14 +157,14 @@ namespace Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("EmployeesId");
+                    b.HasIndex("EmployeeId");
 
-                    b.HasIndex("OrdersId");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("Data.Entities.RolesEntity", b =>
+            modelBuilder.Entity("Data.Entities.RoleEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,13 +194,13 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.EmployeesEntity", b =>
                 {
-                    b.HasOne("Data.Entities.RolesEntity", "RolesName")
+                    b.HasOne("Data.Entities.RoleEntity", "Role")
                         .WithMany("Employees")
-                        .HasForeignKey("RolesNameId")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("RolesName");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Data.Entities.ProjectEntity", b =>
@@ -221,23 +211,23 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.EmployeesEntity", "Employees")
+                    b.HasOne("Data.Entities.EmployeesEntity", "Employee")
                         .WithMany("Projects")
-                        .HasForeignKey("EmployeesId")
+                        .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.OrdersEntity", "Orders")
+                    b.HasOne("Data.Entities.OrderEntity", "Order")
                         .WithMany("Projects")
-                        .HasForeignKey("OrdersId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
 
-                    b.Navigation("Employees");
+                    b.Navigation("Employee");
 
-                    b.Navigation("Orders");
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Data.Entities.ContactEntity", b =>
@@ -255,12 +245,12 @@ namespace Data.Migrations
                     b.Navigation("Projects");
                 });
 
-            modelBuilder.Entity("Data.Entities.OrdersEntity", b =>
+            modelBuilder.Entity("Data.Entities.OrderEntity", b =>
                 {
                     b.Navigation("Projects");
                 });
 
-            modelBuilder.Entity("Data.Entities.RolesEntity", b =>
+            modelBuilder.Entity("Data.Entities.RoleEntity", b =>
                 {
                     b.Navigation("Employees");
                 });

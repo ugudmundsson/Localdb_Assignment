@@ -21,12 +21,12 @@ public class ProjectEntity
 
     [ForeignKey(nameof(EmployeeId))]
     public int EmployeeId { get; set; }
-    public EmployeesEntity Employees { get; set; } = null!;
+    public EmployeesEntity Employee { get; set; } = null!;
 
 
-    [ForeignKey(nameof(CustomerId))]
+    [ForeignKey(nameof(OrderId))]
     public int OrderId { get; set; }
-    public OrdersEntity Orders { get; set; } = null!;
+    public OrderEntity Order { get; set; } = null!;
 
 
 

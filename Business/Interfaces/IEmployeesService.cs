@@ -1,13 +1,14 @@
-﻿using Data.Entities;
+﻿using Business.Dtos;
+using Business.Models;
+using Data.Entities;
 
 namespace Business.Interfaces
 {
     public interface IEmployeesService
     {
-        EmployeesEntity CreateEmployees(EmployeesEntity employeesEntity);
-        bool DeleteEmployees(int id);
-        IEnumerable<EmployeesEntity> GetEmployees();
-        EmployeesEntity GetEmployeesById(int id);
-        EmployeesEntity UpdateEmployees(EmployeesEntity employeesEntity);
+        Task<bool> CreateEmployeesAsync(EmployeesRegistrationForm form);
+        Task<IEnumerable<Employee>> GetEmployeesAsync();
+        Task<Employee> UpdateEmployeesAsync(EmployeeUpdateForm form);
+        Task<bool> DeleteEmployeesAsync(int id);
     }
 }

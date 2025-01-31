@@ -1,0 +1,6 @@
+@PressWebAPI_HostAddress = http://localhost:5251
+
+GET {{PressWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

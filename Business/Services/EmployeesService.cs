@@ -1,58 +1,74 @@
-﻿using Business.Interfaces;
-using Data.Contexts;
+﻿using Business.Dtos;
+using Data.Interfaces;
 using Data.Entities;
-using Microsoft.EntityFrameworkCore;
+using Business.Interfaces;
+using Business.Models;
+using Data.Repositories;
 
 namespace Business.Services;
 
-public class EmployeesService(DataContext context) : IEmployeesService
+public class EmployeesService(IEmployeeRepository employeeRepository) : IEmployeesService
 {
+    private readonly IEmployeeRepository _employeeRepository = employeeRepository;
 
-    private readonly DataContext _context = context;
 
-
-    public EmployeesEntity CreateEmployees(EmployeesEntity employeesEntity)
+    //CREATE-------------------------------------------------
+    public async Task<bool> CreateEmployeesAsync(EmployeesRegistrationForm form)
     {
-
-        _context.Employees.Add(employeesEntity);
-        _context.SaveChanges();
-
-        return employeesEntity;
-    }
-
-    public IEnumerable<EmployeesEntity> GetEmployees()
-    {
-        var customer = _context.Employees.Include(x => x.RolesName).ToList();
-        return _context.Employees;
-    }
-
-    public EmployeesEntity GetEmployeesById(int id)
-    {
-        var employeesEntity = _context.Employees.FirstOrDefault(x => x.Id == id);
-        return employeesEntity ?? null!;
-    }
-
-    public EmployeesEntity UpdateEmployees(EmployeesEntity employeesEntity)
-    {
-        _context.Employees.Update(employeesEntity);
-        _context.SaveChanges();
-
-        return employeesEntity;
-    }
-
-    public bool DeleteEmployees(int id)
-    {
-        var employeesEntity = _context.Employees.FirstOrDefault(x => x.Id == id);
-        if (employeesEntity != null)
+        var employee = new EmployeesEntity
         {
-            _context.Employees.Remove(employeesEntity);
-            _context.SaveChanges();
-            return true;
+            FirstName = form.FirstName,
+            LastName = form.LastName,
+            RoleId = form.RoleId,
+        };
+        var result = await _employeeRepository.CreateAsync(employee);
+        return result;
+    }
+
+
+
+    //READ-------------------------------------------------
+
+    public async Task<IEnumerable<Employee>> GetEmployeesAsync()
+    {
+        var employees = await _employeeRepository.GetAllAsync();
+        return employees.Select(x => new Employee(x.Id, x.FirstName, x.LastName, x.RoleId));
+       
+    }
+
+
+
+
+    //UPDATE-------------------------------------------------
+
+    public async Task<Employee> UpdateEmployeesAsync(EmployeeUpdateForm form)
+    {
+        var employee = await _employeeRepository.GetAsync(x => x.Id == form.Id);
+        {
+            employee.Id = form.Id;
+            employee.FirstName = form.FirstName;
+            employee.LastName = form.LastName;
+            employee.RoleId = form.RoleId;
+
+            var result = await _employeeRepository.UpdateAsync(x => x.Id == form.Id, employee);
+            return new Employee(result.Id, result.FirstName, result.LastName, result.RoleId);
         }
-        else
-        {
+    }
+
+
+
+    //DELETE-------------------------------------------------
+
+    public async Task<bool> DeleteEmployeesAsync(int id)
+    {
+        var contact = await _employeeRepository.GetAsync(x => x.Id == id);
+        if (contact == null)
             return false;
-        }
 
+        var result = await _employeeRepository.DeleteAsync(x => x.Id == id);
+        return result;
     }
+
+
+
 }

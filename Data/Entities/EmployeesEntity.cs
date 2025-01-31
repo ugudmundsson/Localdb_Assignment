@@ -14,7 +14,7 @@ public class EmployeesEntity
 
     [ForeignKey(nameof(RoleId))]
     public int RoleId { get; set; }
-    public RolesEntity RolesName { get; set; } = null!;
+    public RoleEntity Role { get; set; } = null!;
 
     public ICollection<ProjectEntity> Projects { get; set; } = [];
 

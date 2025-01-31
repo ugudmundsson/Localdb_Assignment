@@ -2,10 +2,13 @@
 {
     public interface IMenu
     {
-        void Show();
-        void CreateContact();
-        void CreateCustomer();
-        void ViewAllContacts();
-        void ShowCustomerContact();
+        Task Show();
+        Task CreateEmployee();
+        Task CreateContact();
+        Task CreateCustomer();
+        Task RoleDialogs();
+        Task ViewAllContacts();
+        Task ShowCustomerContact();
+        Task ShowRoles();
     }
 }

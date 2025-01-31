@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Data.Entities;
 
-public class RolesEntity
+public class RoleEntity
 {
     [Key]
     public int Id { get; set; }
