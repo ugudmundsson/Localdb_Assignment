@@ -35,7 +35,21 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
     public async Task<IEnumerable<Customer>> GetAllAsync()
     {
         var customers = await _customerRepository.GetAllAsync();
-        return customers.Select(x => new Customer(x.Id, x.Name, x.ContactId));
+        return customers.Select(x => new Customer
+        {
+            Id = x.Id,
+            Name = x.Name,
+            ContactId = x.ContactId,
+            Contact = new Contact
+            {
+                Id = x.Contact.Id,
+                FirstName = x.Contact.FirstName,
+                LastName = x.Contact.LastName,
+                Email = x.Contact.Email,
+                PhoneNumber = x.Contact.PhoneNumber,
+            }
+        });
+            
     }
 
 
@@ -47,11 +61,16 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
     {
         var customer = await _customerRepository.GetAsync(x => x.Id == form.Id);
         {
-            customer.Id = form.Id;
+            
             customer.Name = form.Name;
             customer.ContactId = form.ContactId;
             var result = await _customerRepository.UpdateAsync(x => x.Id == form.Id, customer);
-            return new Customer(result.Id, result.Name, result.ContactId);
+            return new Customer
+            {
+                
+                Name = form.Name,
+                ContactId = form.ContactId,
+            };
         }
     }
 

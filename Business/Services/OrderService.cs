@@ -31,7 +31,12 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
     public async Task<IEnumerable<Order>> GetAllAsync()
     {
         var orders = await _orderRepository.GetAllAsync();
-        return orders.Select(x => new Order(x.Id, x.OrderName, x.Price));
+        return orders.Select(x => new Order
+        {
+            Id = x.Id,
+            OrderName = x.OrderName,
+            Price = x.Price,
+        });
     }
 
 
@@ -48,7 +53,11 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
             order.Price = form.Price;
 
             var result = await _orderRepository.UpdateAsync(x => x.Id == form.Id, order);
-            return new Order(result.Id, result.OrderName, result.Price);
+            return new Order
+            {
+                OrderName = form.OrderName,
+                Price = form.Price,
+            };
         }
     }
 

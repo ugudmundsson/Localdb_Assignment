@@ -32,7 +32,18 @@ public class EmployeesService(IEmployeeRepository employeeRepository) : IEmploye
     public async Task<IEnumerable<Employee>> GetEmployeesAsync()
     {
         var employees = await _employeeRepository.GetAllAsync();
-        return employees.Select(x => new Employee(x.Id, x.FirstName, x.LastName, x.RoleId));
+        return employees.Select(x => new Employee {
+
+            Id = x.Id,
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            RoleId = x.RoleId,
+            Role = new Role
+            {
+                Id = x.Role.Id,
+                RoleName = x.Role.RoleName,
+            }
+        });
        
     }
 
@@ -45,13 +56,19 @@ public class EmployeesService(IEmployeeRepository employeeRepository) : IEmploye
     {
         var employee = await _employeeRepository.GetAsync(x => x.Id == form.Id);
         {
-            employee.Id = form.Id;
+            
             employee.FirstName = form.FirstName;
             employee.LastName = form.LastName;
             employee.RoleId = form.RoleId;
 
             var result = await _employeeRepository.UpdateAsync(x => x.Id == form.Id, employee);
-            return new Employee(result.Id, result.FirstName, result.LastName, result.RoleId);
+            return new Employee{
+               
+                FirstName = form.FirstName,
+                LastName = form.LastName,
+                RoleId = form.RoleId,
+
+            };
         }
     }
 

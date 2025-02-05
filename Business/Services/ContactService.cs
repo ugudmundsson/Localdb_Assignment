@@ -35,7 +35,14 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
     public async Task<IEnumerable<Contact>> GetAllAsync()
     {
         var contacts = await _contactRepository.GetAllAsync();
-        return contacts.Select(x => new Contact(x.Id, x.FirstName, x.LastName, x.Email, x.PhoneNumber));
+        return contacts.Select(x => new Contact
+        {
+            Id = x.Id,
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            Email = x.Email,
+            PhoneNumber = x.PhoneNumber
+        });
     }
 
     public async Task<ContactEntity> GetByIdAsync(int id)
@@ -53,7 +60,7 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
     {
         var contact = await _contactRepository.GetAsync(x => x.Id == form.Id);
         {
-            contact.Id = form.Id;
+            
             contact.FirstName = form.FirstName;
             contact.LastName = form.LastName;
             contact.Email = form.Email;
@@ -61,7 +68,14 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
         };
 
         var result = await _contactRepository.UpdateAsync(x => x.Id == form.Id, contact);
-        return new Contact(result.Id, result.FirstName, result.LastName, result.Email, result.PhoneNumber);
+        return new Contact {
+            
+            FirstName = form.FirstName,
+            LastName = form.LastName,
+            Email = form.Email,
+            PhoneNumber = form.PhoneNumber
+        };
+        
     }
 
 

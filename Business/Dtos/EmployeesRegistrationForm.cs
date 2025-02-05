@@ -1,4 +1,10 @@
 ﻿namespace Business.Dtos;
 
-public record EmployeesRegistrationForm(string FirstName, string LastName, int RoleId);
+public class EmployeesRegistrationForm
+{
+    public string FirstName { get; set; } = null!;
 
+    public string LastName { get; set; } = null!;
+
+    public int RoleId { get; set; }
+}

@@ -1,3 +1,10 @@
 ﻿namespace Business.Dtos;
 
-public record CustomerRegistrationForm(string Name, int ContactId);
+public class CustomerRegistrationForm
+{
+
+    public string Name { get; set; } = null!; 
+
+    public int ContactId { get; set; }
+
+}

@@ -1,4 +1,9 @@
 ﻿namespace Business.Models;
 
-public record Role(int Id, string RoleName);
+public class Role()
+{
+    public int Id { get; set; }
+
+    public string RoleName { get; set; } = null!;
+}
 

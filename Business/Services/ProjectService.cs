@@ -34,7 +34,40 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
     public async Task<IEnumerable<Project>> GetAllAsync()
     {
         var contacts = await _projectRepository.GetAllAsync();
-        return contacts.Select(x => new Project(x.Id, x.ProjectName, x.ProjectDescription, x.Status, x.StartDate, x.EndDate, x.OrderId, x.CustomerId, x.EmployeeId));
+        return contacts.Select(x => new Project
+        {
+            Id = x.Id,
+            ProjectName = x.ProjectName,
+            Description = x.ProjectDescription,
+            Status = x.Status,
+            Startdate = x.StartDate,
+            Enddate = x.EndDate,
+            EmployeeId = x.EmployeeId,
+            CustomerId = x.CustomerId,
+            OrderId = x.OrderId,    
+            Employee = new Employee
+            {
+                Id = x.Employee.Id,
+                FirstName = x.Employee.FirstName,
+                LastName = x.Employee.LastName,
+                Role = new Role
+                {
+                    Id = x.Employee.Role.Id,
+                    RoleName = x.Employee.Role.RoleName,
+                }
+            },
+            Customer = new Customer
+            {
+                Id = x.Customer.Id,
+                Name = x.Customer.Name,
+            },
+            Order = new Order
+            {
+                Id = x.Order.Id,
+                OrderName = x.Order.OrderName,
+                Price = x.Order.Price
+            }
+        });
     }
 
 
@@ -57,7 +90,18 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
 
 
             var result = await _projectRepository.UpdateAsync(x => x.Id == form.Id, project);
-            return new Project(result.Id, result.ProjectName, result.ProjectDescription, result.Status, result.StartDate, result.EndDate, result.CustomerId, result.OrderId, result.EmployeeId);
+            return new Project
+            {
+                Id = form.Id,
+                ProjectName = form.ProjectName,
+                Description = form.Description,
+                Status = form.Status,
+                Startdate = form.StartDate,
+                Enddate = form.EndDate,
+                CustomerId= form.CustomerId,
+                OrderId = form.OrderId,
+                EmployeeId= form.EmployeeId,
+            };
         }
     }
 

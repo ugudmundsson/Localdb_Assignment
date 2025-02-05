@@ -1,5 +1,6 @@
 ﻿using Business.Dtos;
 using Business.Interfaces;
+using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -103,7 +104,7 @@ public class Menu(IContactService contactService,
         Console.Write("RoleId: ");
         var RoleId = Convert.ToInt32(Console.ReadLine()!);
 
-        var registrationForm = new EmployeesRegistrationForm(FirstName, LastName, RoleId);
+        var registrationForm = new EmployeesRegistrationForm { FirstName = FirstName, LastName = LastName, RoleId = RoleId };
         var result = await _employeeService.CreateEmployeesAsync(registrationForm);
         if (result)
         {
@@ -138,8 +139,14 @@ public class Menu(IContactService contactService,
         var PhoneNumber = Console.ReadLine()!;
         Console.WriteLine();
 
-        var registrationForm = new ContactRegistrationForm(FirstName, LastName,Email, PhoneNumber);
-        var result = await _contactService.CreateContactAsync(registrationForm);
+        var registrationForm = new ContactRegistrationForm
+        {
+            FirstName = FirstName,
+            LastName = LastName,
+            Email = Email,
+            PhoneNumber = PhoneNumber
+        };
+            var result = await _contactService.CreateContactAsync(registrationForm);
         if (result)
         {
             Console.WriteLine($"The Contact was created with id.");
@@ -170,7 +177,7 @@ public class Menu(IContactService contactService,
         Console.Write("ContactId:");
         var ContactId = Convert.ToInt32(Console.ReadLine()!);
 
-        var registrationForm = new CustomerRegistrationForm(Name, ContactId);
+        var registrationForm = new CustomerRegistrationForm { Name = Name, ContactId = ContactId };
         var result = await _customerService.CreateCustomerAsync(registrationForm);
         if (result)
         {
@@ -205,7 +212,7 @@ public class Menu(IContactService contactService,
         var roleName = Console.ReadLine()!;
         Console.WriteLine("");
 
-        var registrationForm = new RoleRegistrationForm(roleName);
+        var registrationForm = new RoleRegistrationForm { RoleName = roleName };
         var result = await _rolesService.CreateRoleAsync(registrationForm);
         if (result)
         {

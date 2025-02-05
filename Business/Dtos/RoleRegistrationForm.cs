@@ -1,4 +1,6 @@
 ﻿namespace Business.Dtos;
 
-public record RoleRegistrationForm(string RoleName);
-
+public class RoleRegistrationForm
+{
+    public string RoleName { get; set; } = null!;
+}

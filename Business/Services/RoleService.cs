@@ -32,7 +32,11 @@ public class RoleService(IRoleRepository roleRepository) : IRoleService
     public async Task<IEnumerable<Role>> GetAllAsync()
     {
        var roles = await _roleRepository.GetAllAsync();
-        return roles.Select(x => new Role(x.Id, x.RoleName));
+        return roles.Select(x => new Role {
+            Id = x.Id,
+            RoleName = x.RoleName,
+
+        });
     }
 
 
@@ -49,7 +53,11 @@ public class RoleService(IRoleRepository roleRepository) : IRoleService
             role.RoleName = form.RoleName;
             
             var result = await _roleRepository.UpdateAsync(x => x.Id == form.Id, role);
-            return new Role(result.Id, result.RoleName);
+            return new Role
+            {
+                Id = form.Id,
+                RoleName = form.RoleName,
+            };
         }
     }
 
