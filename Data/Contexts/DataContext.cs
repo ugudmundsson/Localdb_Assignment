@@ -26,6 +26,15 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             .HasOne(c => c.Contact)
             .WithMany(c => c.Customer)
             .HasForeignKey(c => c.ContactId);
+
+        modelBuilder.Entity<EmployeesEntity>()
+            .HasOne(c => c.Role);
+
+
+        modelBuilder.Entity<ProjectEntity>();
+            
+
+            
     }
 
 }
