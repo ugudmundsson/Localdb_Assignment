@@ -39,9 +39,9 @@ public class RoleController(IRoleService roleService) : ControllerBase
     
     
     
-    [HttpPut]
+    [HttpPut("{id}")]
 
-    public async Task<IActionResult> Update(RoleUpdateForm form)
+    public async Task<IActionResult> Update(int id, RoleUpdateForm form)
     {
         if (!ModelState.IsValid)
         {

@@ -1,5 +1,6 @@
 ﻿
 using Business.Dtos;
+using Business.Factories;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -18,14 +19,7 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
     public async Task<bool> CreateCustomerAsync(CustomerRegistrationForm form)
     {
        
-       
-
-        var customer = new CustomerEntity
-        {
-            Name = form.Name,
-            ContactId = form.ContactId,
-        };
-
+        var customer = CustomerFactory.Create(form);
         var result = await _customerRepository.CreateAsync(customer);
         return result;
     }
@@ -35,21 +29,7 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
     public async Task<IEnumerable<Customer>> GetAllAsync()
     {
         var customers = await _customerRepository.GetAllAsync();
-        return customers.Select(x => new Customer
-        {
-            Id = x.Id,
-            Name = x.Name,
-            ContactId = x.ContactId,
-            Contact = new Contact
-            {
-                Id = x.Contact.Id,
-                FirstName = x.Contact.FirstName,
-                LastName = x.Contact.LastName,
-                Email = x.Contact.Email,
-                PhoneNumber = x.Contact.PhoneNumber,
-            }
-        });
-            
+        return CustomerFactory.Create(customers);
     }
 
 
@@ -60,18 +40,12 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
     public async Task<Customer> UpdateCustomerAsync(CustomerUpdateForm form)
     {
         var customer = await _customerRepository.GetAsync(x => x.Id == form.Id);
-        {
+        
+        customer = CustomerFactory.UpdateEntity(customer, form);
+
+        await _customerRepository.UpdateAsync(x => x.Id == form.Id, customer);
             
-            customer.Name = form.Name;
-            customer.ContactId = form.ContactId;
-            var result = await _customerRepository.UpdateAsync(x => x.Id == form.Id, customer);
-            return new Customer
-            {
-                
-                Name = form.Name,
-                ContactId = form.ContactId,
-            };
-        }
+        return CustomerFactory.Create(customer);
     }
 
 

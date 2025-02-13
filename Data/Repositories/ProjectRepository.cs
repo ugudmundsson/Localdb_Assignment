@@ -17,6 +17,7 @@ public class ProjectRepository(DataContext context) : BaseRepository<ProjectEnti
             .ThenInclude(o => o.Role)
             .Include(o => o.Order)
             .Include(o => o.Customer)
+            .ThenInclude(o => o.Contact)
             .ToListAsync();
     }
 }

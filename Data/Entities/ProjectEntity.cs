@@ -16,8 +16,13 @@ public class ProjectEntity
 
     public DateTime StartDate { get; set; }
 
-    public DateTime EndDate { get; set; }
+    [NotMapped]
+    public DateTime StartDateOnly => StartDate.Date;
 
+    public DateTime EndDate { get; set; }
+    
+    [NotMapped]
+    public DateTime EndDateOnly => EndDate.Date;
 
     [ForeignKey(nameof(EmployeeId))]
     public int EmployeeId { get; set; }
@@ -33,9 +38,5 @@ public class ProjectEntity
     [ForeignKey(nameof(CustomerId))]
     public int CustomerId { get; set; }
     public CustomerEntity Customer { get; set; } = null!;
-
-
-
-
 
 }

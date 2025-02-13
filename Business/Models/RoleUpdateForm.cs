@@ -1,4 +1,9 @@
 ﻿namespace Business.Models;
 
-public record RoleUpdateForm(int Id, string RoleName);
+public class RoleUpdateForm()
+{
+    public int Id { get; set; }
+
+    public string RoleName { get; set; } = null!;
+}
 

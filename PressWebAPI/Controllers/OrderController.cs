@@ -42,8 +42,8 @@ public class OrderController(IOrderService orderService) : ControllerBase
 
 
 
-    [HttpPut]
-    public async Task<IActionResult> Update(OrderUpdateForm form)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, OrderUpdateForm form)
     {
         if (!ModelState.IsValid)
         {

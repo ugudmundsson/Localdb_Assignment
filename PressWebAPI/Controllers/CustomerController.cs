@@ -45,8 +45,8 @@ public class CustomerController(ICustomerService customerService) : ControllerBa
 
 
 
-    [HttpPut]
-    public async Task<IActionResult> Update(CustomerUpdateForm form)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, CustomerUpdateForm form)
     {
         if (!ModelState.IsValid)
         {

@@ -1,4 +1,5 @@
 ﻿using Business.Dtos;
+using Business.Factories;
 using Business.Interfaces;
 using Business.Models;
 using Data.Entities;
@@ -16,14 +17,7 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
     public async Task<bool> CreateContactAsync(ContactRegistrationForm form)
     {
 
-        var contact = new ContactEntity
-        {
-            FirstName = form.FirstName,
-            LastName = form.LastName,
-            Email = form.Email,
-            PhoneNumber = form.PhoneNumber,
-        };
-
+        var contact = ContactFactory.Create(form);
         var result = await _contactRepository.CreateAsync(contact);
         return result;
     }
@@ -35,14 +29,8 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
     public async Task<IEnumerable<Contact>> GetAllAsync()
     {
         var contacts = await _contactRepository.GetAllAsync();
-        return contacts.Select(x => new Contact
-        {
-            Id = x.Id,
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Email = x.Email,
-            PhoneNumber = x.PhoneNumber
-        });
+        return ContactFactory.Create(contacts);
+
     }
 
     public async Task<ContactEntity> GetByIdAsync(int id)
@@ -59,23 +47,13 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
     public async Task<Contact> UpdateContactAsync(ContactUpdateForm form)
     {
         var contact = await _contactRepository.GetAsync(x => x.Id == form.Id);
-        {
-            
-            contact.FirstName = form.FirstName;
-            contact.LastName = form.LastName;
-            contact.Email = form.Email;
-            contact.PhoneNumber = form.PhoneNumber;
-        };
+
+        contact = ContactFactory.UpdateEntity(contact, form);
 
         var result = await _contactRepository.UpdateAsync(x => x.Id == form.Id, contact);
-        return new Contact {
-            
-            FirstName = form.FirstName,
-            LastName = form.LastName,
-            Email = form.Email,
-            PhoneNumber = form.PhoneNumber
-        };
-        
+
+        return ContactFactory.Create(contact);
+
     }
 
 

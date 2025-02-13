@@ -11,6 +11,10 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DeleteForeverRoundedIcon from "@mui/icons-material/DeleteForeverRounded";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import "./Style.css";
 
 function Contact() {
   //GET
@@ -28,7 +32,7 @@ function Contact() {
 
   useEffect(() => {
     fetchdata();
-  }, ["https://localhost:7132/api/contact"]);
+  }, []);
 
   //POST
 
@@ -36,6 +40,7 @@ function Contact() {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [phonenumber, setPhonenumber] = useState("");
+  const [selectedContact, setSelectedContact] = useState(null);
 
   const handleSubmit = async () => {
     const data = {
@@ -60,6 +65,7 @@ function Contact() {
 
       if (response.ok) {
         console.log("Data sent successfully");
+        handleClick("");
       } else {
         console.error("Something went wrong");
       }
@@ -85,17 +91,85 @@ function Contact() {
     }
   };
 
+  //UPDATE
+  const updatebutton = (contact) => {
+    setSelectedContact(contact);
+    setFirstname(contact.firstName);
+    setLastname(contact.lastName);
+    setEmail(contact.email);
+    setPhonenumber(contact.phoneNumber);
+  };
+
+  const handleUpdate = async () => {
+    if (!selectedContact) return;
+
+    const data = {
+      id: selectedContact.id,
+      firstName: firstname,
+      lastName: lastname,
+      email: email,
+      phoneNumber: phonenumber,
+    };
+
+    try {
+      const response = await fetch(
+        `https://localhost:7132/api/contact/${selectedContact.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Data updated successfully");
+        handleClick("Data updated successfully");
+        setSelectedContact(null);
+        setFirstname("");
+        setLastname("");
+        setEmail("");
+        setPhonenumber("");
+      } else {
+        handleClick("Something went wrong");
+      }
+      fetchdata();
+    } catch (error) {
+      console.error("Error during fetch:", error);
+      handleClick("Error during fetch");
+    }
+  };
+
+  //SNACKBAR
+
+  const [open, setOpen] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+  const handleClick = (message) => {
+    setSnackbarMessage(message);
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
-    <TableContainer component={Paper}>
-      Contact's
+    <TableContainer component={Paper} sx={{ marginTop: 3, padding: 3 }}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+        <TableHead className="tablehead">
           <TableRow>
             <TableCell>Firstname</TableCell>
             <TableCell align="left">Lastname</TableCell>
             <TableCell align="left">Email</TableCell>
             <TableCell align="left">Phonenumber</TableCell>
-            <TableCell align="left">Delete</TableCell>
+            <TableCell align="center">Edit</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -110,7 +184,12 @@ function Contact() {
               <TableCell align="left">{row.lastName}</TableCell>
               <TableCell align="left">{row.email}</TableCell>
               <TableCell align="left">{row.phoneNumber}</TableCell>
-              <TableCell align="left">
+              <TableCell align="center">
+                <Button onClick={() => updatebutton(row)}>
+                  <EditNoteIcon />
+                </Button>
+              </TableCell>
+              <TableCell align="center">
                 <Button onClick={() => deletebutton(row.id)}>
                   <DeleteForeverRoundedIcon />
                 </Button>
@@ -125,7 +204,7 @@ function Contact() {
         noValidate
         autoComplete="off"
       >
-        <div>
+        <div className="form">
           <TextField
             id="firstname"
             label="Firstname"
@@ -154,9 +233,23 @@ function Contact() {
             value={phonenumber}
             onChange={(e) => setPhonenumber(e.target.value)}
           />
-          <Button variant="contained" onClick={handleSubmit}>
-            Submit
+          <Button
+            sx={{ m: 2 }}
+            variant="contained"
+            onClick={selectedContact ? handleUpdate : handleSubmit}
+          >
+            {selectedContact ? "Update" : "Submit"}
           </Button>
+          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              variant="filled"
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
         </div>
       </Box>
     </TableContainer>

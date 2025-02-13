@@ -1,6 +1,7 @@
 ﻿using Business.Dtos;
 using Business.Interfaces;
 using Business.Models;
+using Business.Factories;
 using Data.Entities;
 using Data.Interfaces;
 using Data.Repositories;
@@ -16,12 +17,7 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
     public async Task<bool> CreateOrderAsync(OrdersRegistrationForm form)
     {
 
-        var order = new OrderEntity
-        {
-            OrderName = form.OrderName,
-            Price = form.Price,
-        };
-
+        var order = OrderFactory.Create(form);
         var result = await _orderRepository.CreateAsync(order);
         return result;
     }
@@ -31,12 +27,7 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
     public async Task<IEnumerable<Order>> GetAllAsync()
     {
         var orders = await _orderRepository.GetAllAsync();
-        return orders.Select(x => new Order
-        {
-            Id = x.Id,
-            OrderName = x.OrderName,
-            Price = x.Price,
-        });
+        return OrderFactory.Create(orders);
     }
 
 
@@ -47,18 +38,12 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
     public async Task<Order> UpdateOrderAsync(OrderUpdateForm form)
     {
         var order = await _orderRepository.GetAsync(x => x.Id == form.Id);
-        {
-            order.Id = form.Id;
-            order.OrderName = form.OrderName;
-            order.Price = form.Price;
 
-            var result = await _orderRepository.UpdateAsync(x => x.Id == form.Id, order);
-            return new Order
-            {
-                OrderName = form.OrderName,
-                Price = form.Price,
-            };
-        }
+        order = OrderFactory.Update(order, form);
+
+        var result = await _orderRepository.UpdateAsync(x => x.Id == form.Id, order);
+            
+        return OrderFactory.Create(order);
     }
 
 

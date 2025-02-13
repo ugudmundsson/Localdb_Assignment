@@ -1,5 +1,6 @@
 ﻿using Business.Dtos;
 using Business.Interfaces;
+using Business.Factories;
 using Business.Models;
 using Data.Entities;
 using Data.Interfaces;
@@ -18,10 +19,7 @@ public class RoleService(IRoleRepository roleRepository) : IRoleService
     //CREATE-------------------------------------------------
     public async Task<bool> CreateRoleAsync(RoleRegistrationForm form)
     {
-        var role = new RoleEntity
-        {
-            RoleName = form.RoleName,
-        };
+        var role = RoleFactory.Create(form);
         var result = await _roleRepository.CreateAsync(role);
         return result;
     }
@@ -32,11 +30,7 @@ public class RoleService(IRoleRepository roleRepository) : IRoleService
     public async Task<IEnumerable<Role>> GetAllAsync()
     {
        var roles = await _roleRepository.GetAllAsync();
-        return roles.Select(x => new Role {
-            Id = x.Id,
-            RoleName = x.RoleName,
-
-        });
+        return RoleFactory.Create(roles);
     }
 
 
@@ -48,17 +42,13 @@ public class RoleService(IRoleRepository roleRepository) : IRoleService
     public async Task<Role> UpdateRoleAsync(RoleUpdateForm form)
     {
         var role = await _roleRepository.GetAsync(x => x.Id == form.Id);
-        {
-            role.Id = form.Id;
-            role.RoleName = form.RoleName;
-            
-            var result = await _roleRepository.UpdateAsync(x => x.Id == form.Id, role);
-            return new Role
-            {
-                Id = form.Id,
-                RoleName = form.RoleName,
-            };
-        }
+
+        role = RoleFactory.Update(role, form);
+
+        var result = await _roleRepository.UpdateAsync(x => x.Id == form.Id, role);
+
+        return RoleFactory.Create(role);
+
     }
 
 

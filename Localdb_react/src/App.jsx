@@ -14,10 +14,10 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/project" element={<Project />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/employee" element={<Employee />} />
         <Route path="/customer" element={<Customer />} />
-        <Route path="/project" element={<Project />} />
         <Route path="/order" element={<Order />} />
         <Route path="/role" element={<Role />} />
       </Routes>

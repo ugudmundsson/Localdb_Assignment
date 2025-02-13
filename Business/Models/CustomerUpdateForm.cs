@@ -1,4 +1,16 @@
 ﻿namespace Business.Models;
 
-public record CustomerUpdateForm(int Id, string Name, int ContactId);
+
+public class CustomerUpdateForm()
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; } = null!;
+
+    public int ContactId { get; set; }
+
+    public Contact Contact { get; set; } = null!;
+
+}
+
 

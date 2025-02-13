@@ -14,6 +14,12 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import { BentoTwoTone } from "@mui/icons-material";
+import HandymanOutlinedIcon from "@mui/icons-material/HandymanOutlined";
+import RoofingOutlinedIcon from "@mui/icons-material/RoofingOutlined";
+import VillaOutlinedIcon from "@mui/icons-material/VillaOutlined";
+import TabletMacIcon from "@mui/icons-material/TabletMac";
+import CastIcon from "@mui/icons-material/Cast";
+import WebhookIcon from "@mui/icons-material/Webhook";
 
 const pages = ["Project's", "Customer's", "Employee's"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -38,15 +44,22 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ borderRadius: 4 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          <TabletMacIcon />
+          <WebhookIcon sx={{ display: { xs: "none", md: "flex" }, mr: 0 }} />
+          <CastIcon
+            sx={{
+              display: { xs: "none", md: "flex" },
+              mr: 2,
+            }}
+          />
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -57,7 +70,7 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            PROJECT X
+            Web Agency AB
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -94,7 +107,6 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -111,35 +123,45 @@ function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Web Agency AB
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button href="/" variant="contained">
-              HOME
-            </Button>
-            <Button href="/contact" variant="contained">
-              Contact's
-            </Button>
-            <Button href="/employee" variant="contained">
-              Employee's
-            </Button>
-            <Button href="/customer" variant="contained">
-              Customer's
-            </Button>
-            <Button href="/project" variant="contained">
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+            }}
+          >
+            <Button sx={{ marginRight: 1 }} href="/project" variant="contained">
               Project's
             </Button>
-            <Button href="/order" variant="contained">
+            <Button sx={{ marginRight: 1 }} href="/contact" variant="contained">
+              Contact's
+            </Button>
+            <Button
+              sx={{ marginRight: 1 }}
+              href="/employee"
+              variant="contained"
+            >
+              Employee's
+            </Button>
+            <Button
+              sx={{ marginRight: 1 }}
+              href="/customer"
+              variant="contained"
+            >
+              Customer's
+            </Button>
+            <Button sx={{ marginRight: 1 }} href="/order" variant="contained">
               Order's
             </Button>
-            <Button href="/role" variant="contained">
+            <Button sx={{ marginRight: 1 }} href="/role" variant="contained">
               Role's
             </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="src/assets/BJERS.jpg" />
+                <Avatar alt="Remy Sharp" src="src/assets/COOKIE.jpg" />
               </IconButton>
             </Tooltip>
             <Menu

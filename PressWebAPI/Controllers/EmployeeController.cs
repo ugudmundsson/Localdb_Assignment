@@ -46,8 +46,8 @@ public class EmployeeController(IEmployeesService employeesService) : Controller
 
 
 
-    [HttpPut]
-    public async Task<IActionResult> Update(EmployeeUpdateForm form)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, EmployeeUpdateForm form)
     {
         if (!ModelState.IsValid)
         {

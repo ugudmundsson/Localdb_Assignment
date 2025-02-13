@@ -46,8 +46,8 @@ public class ContactController(IContactService contactService) : ControllerBase
 
 
 
-    [HttpPut]
-    public async Task<IActionResult> Update(ContactUpdateForm form)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, ContactUpdateForm form)
     {
         if (!ModelState.IsValid)
         {
