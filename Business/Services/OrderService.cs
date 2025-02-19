@@ -16,10 +16,22 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
     //CREATE-------------------------------------------------
     public async Task<bool> CreateOrderAsync(OrdersRegistrationForm form)
     {
-
+        await _orderRepository.BeginTransactionAsync();
+        try
+        {
         var order = OrderFactory.Create(form);
-        var result = await _orderRepository.CreateAsync(order);
+            await _orderRepository.CommitTransactionAsync();
+            await _orderRepository.SaveChangesAsync();
+            var result = await _orderRepository.CreateAsync(order);
         return result;
+
+        }
+        catch
+        {
+            await _orderRepository.RollbackTransactionAsync();
+            return false;
+        }
+
     }
 
     //READ-------------------------------------------------
@@ -37,13 +49,24 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
 
     public async Task<Order> UpdateOrderAsync(OrderUpdateForm form)
     {
+        await _orderRepository.BeginTransactionAsync();
+        try
+        {
         var order = await _orderRepository.GetAsync(x => x.Id == form.Id);
 
         order = OrderFactory.Update(order, form);
-
-        var result = await _orderRepository.UpdateAsync(x => x.Id == form.Id, order);
+            await _orderRepository.CommitTransactionAsync();
+            await _orderRepository.SaveChangesAsync();
+            var result = await _orderRepository.UpdateAsync(x => x.Id == form.Id, order);
             
         return OrderFactory.Create(order);
+
+        }
+        catch
+        {
+            await _orderRepository.RollbackTransactionAsync();
+            return null;
+        }
     }
 
 
@@ -51,12 +74,23 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
 
     public async Task<bool> DeleteOrderAsync(int id)
     {
+        await _orderRepository.BeginTransactionAsync();
+        try
+        {
         var contact = await _orderRepository.GetAsync(x => x.Id == id);
         if (contact == null)
             return false;
+            var result = await _orderRepository.DeleteAsync(x => x.Id == id);
+            await _orderRepository.CommitTransactionAsync();
+            await _orderRepository.SaveChangesAsync();
+            return result;
 
-        var result = await _orderRepository.DeleteAsync(x => x.Id == id);
-        return result;
+        }
+        catch
+        {
+            await _orderRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 

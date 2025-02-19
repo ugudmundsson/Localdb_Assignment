@@ -15,11 +15,22 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
     //CREATE-------------------------------------------------
     public async Task<bool> CreateProjectAsync(ProjectRegistrationForm form)
     {
+        await _projectRepository.BeginTransactionAsync();
+        try
+        {
         var project = ProjectFactory.Create(form);
 
         var result = await _projectRepository.CreateAsync(project);
+            await _projectRepository.CommitTransactionAsync();
+            await _projectRepository.SaveChangesAsync();
+            return result;
 
-        return result;
+        }
+        catch
+        {
+            await _projectRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 
@@ -37,25 +48,48 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
 
     public async Task<Project> UpdateProjectAsync(ProjectUpdateForm form)
     {
+        await _projectRepository.BeginTransactionAsync();
+        try
+        {
         var project = await _projectRepository.GetAsync(x => x.Id == form.Id);
 
         project = ProjectFactory.UpdateEntity(project, form);
-
-        var result = await _projectRepository.UpdateAsync(x => x.Id == form.Id, project);
-            
+            await _projectRepository.CommitTransactionAsync();
+            await _projectRepository.SaveChangesAsync();
+            var result = await _projectRepository.UpdateAsync(x => x.Id == form.Id, project);
+          
         return ProjectFactory.Create(project);
+
+        }
+        catch
+        {
+            await _projectRepository.RollbackTransactionAsync();
+            return null;
+        }
     }
 
     //DELETE-------------------------------------------------
 
     public async Task<bool> DeleteProjectAsync(int id)
     {
+        await _projectRepository.BeginTransactionAsync();
+        try
+        {
         var contact = await _projectRepository.GetAsync(x => x.Id == id);
         if (contact == null)
             return false;
 
         var result = await _projectRepository.DeleteAsync(x => x.Id == id);
-        return result;
+            await _projectRepository.CommitTransactionAsync();
+            await _projectRepository.SaveChangesAsync();
+            return result;
+
+        }
+        catch
+        {
+            await _projectRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 

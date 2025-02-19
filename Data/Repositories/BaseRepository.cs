@@ -11,11 +11,9 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
 {
     private readonly DataContext _context = context;
     private readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
-
     private IDbContextTransaction _transaction = null!;
 
 
-    //---------------------------------------
 
     public virtual async Task BeginTransactionAsync()
     {
@@ -60,7 +58,6 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
         try
         {
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
             return true;
         }
         catch (Exception ex)
@@ -115,7 +112,6 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
                 return null!;
 
             _context.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
-            await _context.SaveChangesAsync();
             return existingEntity;
         }
         catch (Exception ex)
@@ -143,7 +139,6 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
             if (entity == null)
                 return false;
             _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
             return true;
         }
         catch (Exception ex)
@@ -153,4 +148,19 @@ public abstract class BaseRepository<TEntity>(DataContext context) : IBaseReposi
         }
     }
 
+    // SAVE CHANGES-------------------------------------------------
+
+    public virtual async Task<bool> SaveChangesAsync()
+    {
+        try
+        {
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error saving changes to database :: {ex.Message}");
+            return false;
+        }
+    }
 }

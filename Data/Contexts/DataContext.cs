@@ -17,11 +17,13 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
     public DbSet<RoleEntity> Roles { get; set; }
 
-   
-    
-    
+
+
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+   
         modelBuilder.Entity<CustomerEntity>()
             .HasOne(c => c.Contact)
             .WithMany(c => c.Customer)

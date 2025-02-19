@@ -16,9 +16,21 @@ public class EmployeesService(IEmployeeRepository employeeRepository) : IEmploye
     //CREATE-------------------------------------------------
     public async Task<bool> CreateEmployeesAsync(EmployeesRegistrationForm form)
     {
+        await _employeeRepository.BeginTransactionAsync();
+        try
+        {
         var employee = EmployeeFactory.Create(form);
-        var result = await _employeeRepository.CreateAsync(employee);
+            await _employeeRepository.CommitTransactionAsync();
+            await _employeeRepository.SaveChangesAsync();
+            var result = await _employeeRepository.CreateAsync(employee);
         return result;
+
+        }
+        catch
+        {
+            await _employeeRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 
@@ -40,14 +52,25 @@ public class EmployeesService(IEmployeeRepository employeeRepository) : IEmploye
 
     public async Task<Employee> UpdateEmployeesAsync(EmployeeUpdateForm form)
     {
+        await _employeeRepository.BeginTransactionAsync();
+        try
+        {
         var employee = await _employeeRepository.GetAsync(x => x.Id == form.Id);
       
         employee = EmployeeFactory.UpdateEntity(employee, form);
-
-        var result = await _employeeRepository.UpdateAsync(x => x.Id == form.Id, employee);
+            await _employeeRepository.CommitTransactionAsync();
+            await _employeeRepository.SaveChangesAsync();
+            var result = await _employeeRepository.UpdateAsync(x => x.Id == form.Id, employee);
             
         return EmployeeFactory.Create(employee);
-        
+
+        }
+        catch
+        {
+            await _employeeRepository.RollbackTransactionAsync();
+            return null;
+        }
+
     }
 
 
@@ -56,12 +79,24 @@ public class EmployeesService(IEmployeeRepository employeeRepository) : IEmploye
 
     public async Task<bool> DeleteEmployeesAsync(int id)
     {
+        await _employeeRepository.BeginTransactionAsync();
+        try
+        {
         var contact = await _employeeRepository.GetAsync(x => x.Id == id);
         if (contact == null)
             return false;
 
         var result = await _employeeRepository.DeleteAsync(x => x.Id == id);
-        return result;
+            await _employeeRepository.CommitTransactionAsync();
+            await _employeeRepository.SaveChangesAsync();
+            return result;
+
+        }
+        catch
+        {
+            await _employeeRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 

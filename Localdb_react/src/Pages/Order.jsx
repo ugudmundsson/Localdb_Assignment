@@ -15,6 +15,9 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import "./Style.css";
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Link from "@mui/material/Link";
 
 function Order() {
   //GET
@@ -148,6 +151,14 @@ function Order() {
 
   return (
     <TableContainer component={Paper} sx={{ marginTop: 3, padding: 3 }}>
+      <div>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: 3 }}>
+          <Link underline="hover" color="inherit" href="/">
+            Home
+          </Link>
+          <Typography sx={{ color: "text.primary" }}>Order's</Typography>
+        </Breadcrumbs>
+      </div>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead className="tablehead">
           <TableRow>

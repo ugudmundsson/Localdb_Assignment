@@ -16,10 +16,22 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
     //CREATE-------------------------------------------------
     public async Task<bool> CreateContactAsync(ContactRegistrationForm form)
     {
+        await _contactRepository.BeginTransactionAsync();
+        try
+        {
+            var contact = ContactFactory.Create(form);
+            var result = await _contactRepository.CreateAsync(contact);
+            await _contactRepository.CommitTransactionAsync();
+            await _contactRepository.SaveChangesAsync();
+            return result;
+        }
+        catch
+        {
+            await _contactRepository.RollbackTransactionAsync();
+            return false;
+        }
+        
 
-        var contact = ContactFactory.Create(form);
-        var result = await _contactRepository.CreateAsync(contact);
-        return result;
     }
 
 
@@ -46,13 +58,24 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
 
     public async Task<Contact> UpdateContactAsync(ContactUpdateForm form)
     {
-        var contact = await _contactRepository.GetAsync(x => x.Id == form.Id);
+        await _contactRepository.BeginTransactionAsync();
+        try
+        {
 
-        contact = ContactFactory.UpdateEntity(contact, form);
+             var contact = await _contactRepository.GetAsync(x => x.Id == form.Id);
+             contact = ContactFactory.UpdateEntity(contact, form);
+             var result = await _contactRepository.UpdateAsync(x => x.Id == form.Id, contact);
+            await _contactRepository.CommitTransactionAsync();
+            await _contactRepository.SaveChangesAsync();
+            return ContactFactory.Create(contact);
+        }
+        catch
+        {
+            await _contactRepository.RollbackTransactionAsync();
+            return null;
+        }
 
-        var result = await _contactRepository.UpdateAsync(x => x.Id == form.Id, contact);
 
-        return ContactFactory.Create(contact);
 
     }
 
@@ -64,12 +87,24 @@ public class ContactService(IContactRepository contactRepository) : IContactServ
 
     public async Task<bool> DeleteContactAsync(int id)
     {
+        await _contactRepository.BeginTransactionAsync();
+        try
+        {
         var contact = await _contactRepository.GetAsync(x => x.Id == id);
         if (contact == null)
             return false;
 
-        var result = await _contactRepository.DeleteAsync(x => x.Id == id);
-        return result;
+            var result = await _contactRepository.DeleteAsync(x => x.Id == id);
+            await _contactRepository.CommitTransactionAsync();
+            await _contactRepository.SaveChangesAsync();
+            return result;
+
+        }
+        catch
+        {
+            await _contactRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 

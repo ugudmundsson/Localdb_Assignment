@@ -20,6 +20,12 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import "./Style.css";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format } from "date-fns";
+import Typography from "@mui/material/Typography";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Link from "@mui/material/Link";
 
 function Project() {
   //GET
@@ -267,9 +273,18 @@ function Project() {
 
   return (
     <TableContainer component={Paper} sx={{ marginTop: 3, padding: 3 }}>
+      <div>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: 3 }}>
+          <Link underline="hover" color="inherit" href="/">
+            Home
+          </Link>
+          <Typography sx={{ color: "text.primary" }}>Project's</Typography>
+        </Breadcrumbs>
+      </div>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead className="tablehead">
           <TableRow>
+            <TableCell>Project Nr</TableCell>
             <TableCell>Project Name</TableCell>
             <TableCell align="left">Project Description</TableCell>
             <TableCell align="left">Status</TableCell>
@@ -289,12 +304,19 @@ function Project() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
+                {row.id}
+              </TableCell>
+              <TableCell component="th" scope="row">
                 {row.projectName}
               </TableCell>
               <TableCell align="left">{row.description}</TableCell>
               <TableCell align="left">{row.status}</TableCell>
-              <TableCell align="left">{row.startdate}</TableCell>
-              <TableCell align="left">{row.enddate}</TableCell>
+              <TableCell align="left">
+                {format(new Date(row.startdate), "yyyy-MM-dd")}
+              </TableCell>
+              <TableCell align="left">
+                {format(new Date(row.enddate), "yyyy-MM-dd")}
+              </TableCell>
               <TableCell align="left">{row.customer.name}</TableCell>
               <TableCell align="left">
                 {row.employee.firstName} - {row.employee.role.roleName}
@@ -346,13 +368,26 @@ function Project() {
             id="StartDate"
             label="Start Date"
             variant="standard"
+            description="yyyy-MM-dd"
+            placeholder="yyyy-MM-dd"
             value={startdate}
             onChange={(e) => setStartDate(e.target.value)}
           />
+          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Start Date"
+              value={startdate}
+              onChange={(date) => setStartDate(date)}
+              renderInput={(params) => (
+                <TextField {...params} variant="standard" />
+              )}
+            />
+          </LocalizationProvider> */}
           <TextField
             id="EndDate"
             label="End Date"
             variant="standard"
+            placeholder="yyyy-MM-dd"
             value={enddate}
             onChange={(e) => setEndDate(e.target.value)}
           />

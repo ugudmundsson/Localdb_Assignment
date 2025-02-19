@@ -18,10 +18,21 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
     //CREATE-------------------------------------------------
     public async Task<bool> CreateCustomerAsync(CustomerRegistrationForm form)
     {
-       
+        await _customerRepository.BeginTransactionAsync();
+        try
+        {
         var customer = CustomerFactory.Create(form);
         var result = await _customerRepository.CreateAsync(customer);
-        return result;
+            await _customerRepository.CommitTransactionAsync();
+            await _customerRepository.SaveChangesAsync();
+            return result;
+
+        }
+        catch
+        {
+            await _customerRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 
@@ -39,13 +50,23 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
 
     public async Task<Customer> UpdateCustomerAsync(CustomerUpdateForm form)
     {
+        await _customerRepository.BeginTransactionAsync();
+        try
+        {
         var customer = await _customerRepository.GetAsync(x => x.Id == form.Id);
-        
         customer = CustomerFactory.UpdateEntity(customer, form);
 
-        await _customerRepository.UpdateAsync(x => x.Id == form.Id, customer);
-            
-        return CustomerFactory.Create(customer);
+            await _customerRepository.UpdateAsync(x => x.Id == form.Id, customer);
+            await _customerRepository.CommitTransactionAsync();
+            await _customerRepository.SaveChangesAsync();
+            return CustomerFactory.Create(customer);
+
+        }
+        catch
+        {
+            await _customerRepository.RollbackTransactionAsync();
+            return null;
+        }
     }
 
 
@@ -54,12 +75,24 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
 
     public async Task<bool> DeleteContactAsync(int id)
     {
+        try
+            await _customerRepository.BeginTransactionAsync();
+        {
         var contact = await _customerRepository.GetAsync(x => x.Id == id);
         if (contact == null)
             return false;
 
         var result = await _customerRepository.DeleteAsync(x => x.Id == id);
-        return result;
+            await _customerRepository.CommitTransactionAsync();
+            await _customerRepository.SaveChangesAsync();
+            return result;
+
+        }
+        catch
+        {
+            await _customerRepository.RollbackTransactionAsync();
+            return false;
+        }
     }
 
 
