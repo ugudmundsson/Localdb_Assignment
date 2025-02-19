@@ -18,9 +18,8 @@ public class ProjectService(IProjectRepository projectRepository) : IProjectServ
         await _projectRepository.BeginTransactionAsync();
         try
         {
-        var project = ProjectFactory.Create(form);
-
-        var result = await _projectRepository.CreateAsync(project);
+            var project = ProjectFactory.Create(form);
+            var result = await _projectRepository.CreateAsync(project);
             await _projectRepository.CommitTransactionAsync();
             await _projectRepository.SaveChangesAsync();
             return result;

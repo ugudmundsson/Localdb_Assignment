@@ -19,10 +19,10 @@ public class OrderService(IOrderRepository orderRepository) : IOrderService
         await _orderRepository.BeginTransactionAsync();
         try
         {
-        var order = OrderFactory.Create(form);
+            var order = OrderFactory.Create(form);
+            var result = await _orderRepository.CreateAsync(order);
             await _orderRepository.CommitTransactionAsync();
             await _orderRepository.SaveChangesAsync();
-            var result = await _orderRepository.CreateAsync(order);
         return result;
 
         }

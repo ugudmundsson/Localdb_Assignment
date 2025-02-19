@@ -21,8 +21,8 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
         await _customerRepository.BeginTransactionAsync();
         try
         {
-        var customer = CustomerFactory.Create(form);
-        var result = await _customerRepository.CreateAsync(customer);
+            var customer = CustomerFactory.Create(form);
+            var result = await _customerRepository.CreateAsync(customer);
             await _customerRepository.CommitTransactionAsync();
             await _customerRepository.SaveChangesAsync();
             return result;
@@ -75,8 +75,9 @@ public class CustomerService(ICustomertRepository customerRepository) : ICustome
 
     public async Task<bool> DeleteContactAsync(int id)
     {
-        try
-            await _customerRepository.BeginTransactionAsync();
+        await _customerRepository.BeginTransactionAsync();
+        
+        try    
         {
         var contact = await _customerRepository.GetAsync(x => x.Id == id);
         if (contact == null)

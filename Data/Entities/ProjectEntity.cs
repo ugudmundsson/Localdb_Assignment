@@ -39,4 +39,5 @@ public class ProjectEntity
     public int CustomerId { get; set; }
     public CustomerEntity Customer { get; set; } = null!;
 
+
 }

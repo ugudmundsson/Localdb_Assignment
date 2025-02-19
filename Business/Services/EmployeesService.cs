@@ -19,10 +19,10 @@ public class EmployeesService(IEmployeeRepository employeeRepository) : IEmploye
         await _employeeRepository.BeginTransactionAsync();
         try
         {
-        var employee = EmployeeFactory.Create(form);
+            var employee = EmployeeFactory.Create(form);
+            var result = await _employeeRepository.CreateAsync(employee);
             await _employeeRepository.CommitTransactionAsync();
             await _employeeRepository.SaveChangesAsync();
-            var result = await _employeeRepository.CreateAsync(employee);
         return result;
 
         }

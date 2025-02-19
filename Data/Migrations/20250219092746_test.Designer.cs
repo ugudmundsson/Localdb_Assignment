@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250205160623_Test1")]
-    partial class Test1
+    [Migration("20250219092746_test")]
+    partial class test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,12 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TaskStatusId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
@@ -163,6 +169,8 @@ namespace Data.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("TaskStatusId");
 
                     b.ToTable("Projects");
                 });
@@ -182,6 +190,27 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Data.Entities.StatusEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("StatusName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaskStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Status");
                 });
 
             modelBuilder.Entity("Data.Entities.CustomerEntity", b =>
@@ -226,11 +255,19 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Data.Entities.StatusEntity", "TaskStatus")
+                        .WithMany("Projects")
+                        .HasForeignKey("TaskStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
 
                     b.Navigation("Employee");
 
                     b.Navigation("Order");
+
+                    b.Navigation("TaskStatus");
                 });
 
             modelBuilder.Entity("Data.Entities.ContactEntity", b =>
@@ -256,6 +293,11 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.RoleEntity", b =>
                 {
                     b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("Data.Entities.StatusEntity", b =>
+                {
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

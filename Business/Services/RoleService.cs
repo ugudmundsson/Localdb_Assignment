@@ -22,8 +22,8 @@ public class RoleService(IRoleRepository roleRepository) : IRoleService
         await _roleRepository.BeginTransactionAsync();
         try
         {
-        var role = RoleFactory.Create(form);
-        var result = await _roleRepository.CreateAsync(role);
+            var role = RoleFactory.Create(form);
+            var result = await _roleRepository.CreateAsync(role);
             await _roleRepository.CommitTransactionAsync();
             await _roleRepository.SaveChangesAsync();  
             return result;
