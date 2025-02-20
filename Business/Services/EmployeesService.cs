@@ -55,9 +55,11 @@ public class EmployeesService(IEmployeeRepository employeeRepository) : IEmploye
         await _employeeRepository.BeginTransactionAsync();
         try
         {
-        var employee = await _employeeRepository.GetAsync(x => x.Id == form.Id);
+                       
+            var employee = await _employeeRepository.GetAsync(x => x.Id == form.Id);
       
-        employee = EmployeeFactory.UpdateEntity(employee, form);
+            employee = EmployeeFactory.UpdateEntity(employee, form);
+            
             await _employeeRepository.CommitTransactionAsync();
             await _employeeRepository.SaveChangesAsync();
             var result = await _employeeRepository.UpdateAsync(x => x.Id == form.Id, employee);

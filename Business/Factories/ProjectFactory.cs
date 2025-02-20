@@ -14,10 +14,10 @@ public class ProjectFactory
             ProjectDescription = form.ProjectDescription,
             StartDate = form.StartDate,
             EndDate = form.EndDate,
-            Status = form.Status,
             CustomerId = form.CustomerId,
             EmployeeId = form.EmployeeId,
-            OrderId = form.OrderId
+            OrderId = form.OrderId,
+            StatusId = form.StatusId
         };
     }
     public static Project Create(ProjectEntity entity)
@@ -29,10 +29,10 @@ public class ProjectFactory
             Description = entity.ProjectDescription,
             Startdate = entity.StartDate,
             Enddate = entity.EndDate,
-            Status = entity.Status,
             CustomerId = entity.CustomerId,
             EmployeeId = entity.EmployeeId,
-            OrderId = entity.OrderId
+            OrderId = entity.OrderId,
+            StatusId = entity.StatusId
         };
     }
     public static ProjectEntity UpdateEntity(ProjectEntity entity, ProjectUpdateForm form)
@@ -42,10 +42,10 @@ public class ProjectFactory
         entity.ProjectDescription = form.Description;
         entity.StartDate = form.StartDate;
         entity.EndDate = form.EndDate;
-        entity.Status = form.Status;
         entity.CustomerId = form.CustomerId;
         entity.EmployeeId = form.EmployeeId;
         entity.OrderId = form.OrderId;
+        entity.StatusId = form.StatusId;
         return entity;
     }
     public static IEnumerable<Project> Create(IEnumerable<ProjectEntity> entities)
@@ -57,7 +57,6 @@ public class ProjectFactory
             Description = x.ProjectDescription,
             Startdate = x.StartDate,
             Enddate = x.EndDate,
-            Status = x.Status,
             CustomerId = x.CustomerId,
             Customer = new Customer
             {
@@ -90,7 +89,14 @@ public class ProjectFactory
                 Id = x.Order.Id,
                 OrderName = x.Order.OrderName,
                 Price = x.Order.Price,
+            },
+            Status = new Status
+            {
+                Id = x.Status.Id,
+                Name = x.Status.Name
+
             }
-            });
+        });
+
     }
-}
+    }

@@ -20,12 +20,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import "./Style.css";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { format } from "date-fns";
-import Typography from "@mui/material/Typography";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
 
 function Project() {
   //GET
@@ -98,6 +93,7 @@ function Project() {
   const [customer, setCustomer] = React.useState("");
   const [employee, setEmployee] = React.useState("");
   const [order, setOrder] = React.useState("");
+  const [status, setStatus] = React.useState("");
 
   const handleCustomerChange = (event) => {
     setCustomer(event.target.value);
@@ -111,9 +107,12 @@ function Project() {
     setOrder(event.target.value);
   };
 
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  };
+
   const [projectname, setProjectName] = useState("");
   const [projectdescription, setProjectDescription] = useState("");
-  const [Status, setStatus] = useState("");
   const [startdate, setStartDate] = useState("");
   const [enddate, setEndDate] = useState("");
   const [selectedProject, setSelectedProject] = useState(null);
@@ -122,21 +121,21 @@ function Project() {
     const data = {
       projectname,
       projectdescription,
-      Status,
       startdate,
       enddate,
       customerId: customer,
       employeeId: employee,
       orderId: order,
+      statusId: status,
     };
     setProjectName("");
     setProjectDescription("");
-    setStatus("");
     setStartDate("");
     setEndDate("");
     setOrder("");
     setEmployee("");
     setCustomer("");
+    setStatus("");
 
     try {
       const response = await fetch("https://localhost:7132/api/project", {
@@ -179,12 +178,12 @@ function Project() {
     setSelectedProject(contact);
     setProjectName(contact.projectName);
     setProjectDescription(contact.description);
-    setStatus(contact.status);
     setStartDate(contact.startdate);
     setEndDate(contact.enddate);
     setCustomer(contact.customer.id);
     setEmployee(contact.employee.id);
     setOrder(contact.order.id);
+    setStatus(contact.status.id);
   };
 
   const handleUpdate = async () => {
@@ -194,7 +193,6 @@ function Project() {
       id: selectedProject.id,
       projectName: projectname,
       description: projectdescription,
-      status: Status,
       startdate: startdate,
       enddate: enddate,
       customerId: customer,
@@ -217,6 +215,9 @@ function Project() {
       order: selectedProject.order,
       orderName: selectedProject.order.orderName,
       price: selectedProject.order.price,
+      statusId: status,
+      status: selectedProject.status,
+      statusName: selectedProject.status.name,
     };
     console.log(data);
     try {
@@ -273,18 +274,9 @@ function Project() {
 
   return (
     <TableContainer component={Paper} sx={{ marginTop: 3, padding: 3 }}>
-      <div>
-        <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: 3 }}>
-          <Link underline="hover" color="inherit" href="/">
-            Home
-          </Link>
-          <Typography sx={{ color: "text.primary" }}>Project's</Typography>
-        </Breadcrumbs>
-      </div>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead className="tablehead">
           <TableRow>
-            <TableCell>Project Nr</TableCell>
             <TableCell>Project Name</TableCell>
             <TableCell align="left">Project Description</TableCell>
             <TableCell align="left">Status</TableCell>
@@ -304,13 +296,10 @@ function Project() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.id}
-              </TableCell>
-              <TableCell component="th" scope="row">
                 {row.projectName}
               </TableCell>
               <TableCell align="left">{row.description}</TableCell>
-              <TableCell align="left">{row.status}</TableCell>
+              <TableCell align="left">{row.status.name}</TableCell>
               <TableCell align="left">
                 {format(new Date(row.startdate), "yyyy-MM-dd")}
               </TableCell>
@@ -357,13 +346,26 @@ function Project() {
             value={projectdescription}
             onChange={(e) => setProjectDescription(e.target.value)}
           />
-          <TextField
-            id="status"
-            label="Status"
-            variant="standard"
-            value={Status}
-            onChange={(e) => setStatus(e.target.value)}
-          />
+          <FormControl variant="standard" sx={{ m: 0, minWidth: 140 }}>
+            <InputLabel id="status-select-label">Status</InputLabel>
+            <Select
+              labelId="status-select-label"
+              id="status-select"
+              value={status}
+              onChange={handleStatusChange}
+              label="Status"
+            >
+              <MenuItem key="1" value="1">
+                Pending
+              </MenuItem>
+              <MenuItem key="2" value="2">
+                Active
+              </MenuItem>
+              <MenuItem key="3" value="3">
+                Completed
+              </MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             id="StartDate"
             label="Start Date"
@@ -373,16 +375,6 @@ function Project() {
             value={startdate}
             onChange={(e) => setStartDate(e.target.value)}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DatePicker
-              label="Start Date"
-              value={startdate}
-              onChange={(date) => setStartDate(date)}
-              renderInput={(params) => (
-                <TextField {...params} variant="standard" />
-              )}
-            />
-          </LocalizationProvider> */}
           <TextField
             id="EndDate"
             label="End Date"

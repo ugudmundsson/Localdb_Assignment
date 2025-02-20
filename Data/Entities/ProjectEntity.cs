@@ -12,8 +12,6 @@ public class ProjectEntity
 
     public string ProjectDescription { get; set; } = null!;
 
-    public string Status { get; set; } = null!;
-
     public DateTime StartDate { get; set; }
 
     [NotMapped]
@@ -38,6 +36,11 @@ public class ProjectEntity
     [ForeignKey(nameof(CustomerId))]
     public int CustomerId { get; set; }
     public CustomerEntity Customer { get; set; } = null!;
+
+
+    [ForeignKey(nameof(StatusId))]
+    public int StatusId { get; set; }
+    public StatusEntity Status { get; set; } = null!;
 
 
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250219092746_test")]
+    [Migration("20250220120523_test")]
     partial class test
     {
         /// <inheritdoc />
@@ -152,14 +152,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TaskStatusId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -170,7 +163,7 @@ namespace Data.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("TaskStatusId");
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Projects");
                 });
@@ -200,17 +193,30 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("StatusName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TaskStatus")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Status");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Pending"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Active"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Completed"
+                        });
                 });
 
             modelBuilder.Entity("Data.Entities.CustomerEntity", b =>
@@ -255,9 +261,9 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.StatusEntity", "TaskStatus")
+                    b.HasOne("Data.Entities.StatusEntity", "Status")
                         .WithMany("Projects")
-                        .HasForeignKey("TaskStatusId")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -267,7 +273,7 @@ namespace Data.Migrations
 
                     b.Navigation("Order");
 
-                    b.Navigation("TaskStatus");
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("Data.Entities.ContactEntity", b =>

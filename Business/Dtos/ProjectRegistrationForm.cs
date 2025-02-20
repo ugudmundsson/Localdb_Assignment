@@ -7,8 +7,6 @@ public class ProjectRegistrationForm
 
     public string ProjectDescription { get; set; } = null!;
 
-    public string Status { get; set; } = null!;
-
     public DateTime StartDate { get; set; }
 
     public DateTime EndDate { get; set; }
@@ -18,6 +16,8 @@ public class ProjectRegistrationForm
     public int CustomerId { get; set; }
 
     public int OrderId { get; set; }
+
+    public int StatusId { get; set; }
 
 
 }

@@ -68,7 +68,7 @@ function Contact() {
 
       if (response.ok) {
         console.log("Data sent successfully");
-        handleClick("");
+        handleClick("Contact was successfully created");
       } else {
         console.error("Something went wrong");
       }

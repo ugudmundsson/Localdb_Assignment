@@ -9,10 +9,7 @@ public class Project()
 
     public string Description { get; set; } = null!;
 
-    public string Status { get; set; } = null!;
-
     public DateTime Startdate { get; set; }
-
 
     public DateTime Enddate { get; set; }
 
@@ -22,11 +19,15 @@ public class Project()
 
     public int OrderId { get; set; }
 
+    public int StatusId { get; set; }
+
     public Employee Employee { get; set; } = null!;
 
     public Order Order { get; set; } = null!;
 
     public Customer Customer { get; set; } = null!;
+
+    public Status Status { get; set; } = null!;
 
 
 }
