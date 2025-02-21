@@ -279,7 +279,7 @@ function Project() {
           <TableRow>
             <TableCell>Project Name</TableCell>
             <TableCell align="left">Project Description</TableCell>
-            <TableCell align="left">Status</TableCell>
+            <TableCell align="center">Status</TableCell>
             <TableCell align="left">Start Date</TableCell>
             <TableCell align="left">End Date</TableCell>
             <TableCell align="left">Customer</TableCell>
@@ -299,7 +299,9 @@ function Project() {
                 {row.projectName}
               </TableCell>
               <TableCell align="left">{row.description}</TableCell>
-              <TableCell align="left">{row.status.name}</TableCell>
+              <TableCell align="center" className="status">
+                {row.status.name}
+              </TableCell>
               <TableCell align="left">
                 {format(new Date(row.startdate), "yyyy-MM-dd")}
               </TableCell>
@@ -355,13 +357,31 @@ function Project() {
               onChange={handleStatusChange}
               label="Status"
             >
-              <MenuItem key="1" value="1">
+              <MenuItem
+                key="1"
+                value="1"
+                sx={{ color: "orange", border: 1, borderRadius: 5 }}
+              >
                 Pending
               </MenuItem>
-              <MenuItem key="2" value="2">
+              <MenuItem
+                key="2"
+                value="2"
+                sx={{
+                  color: "green",
+                  border: 1,
+                  borderRadius: 5,
+                  marginTop: 0.5,
+                  marginBottom: 0.5,
+                }}
+              >
                 Active
               </MenuItem>
-              <MenuItem key="3" value="3">
+              <MenuItem
+                key="3"
+                value="3"
+                sx={{ color: "blue", border: 1, borderRadius: 5 }}
+              >
                 Completed
               </MenuItem>
             </Select>

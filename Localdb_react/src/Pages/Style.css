@@ -6,3 +6,6 @@
 .tablehead {
   background: #e8f2fc;
 }
+.status {
+  border-radius: 100px;
+}
